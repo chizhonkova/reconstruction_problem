@@ -21,10 +21,31 @@ public:
     Structure structure;
 };
 
+struct Reconstruction
+{
+    Reconstruction(std::shared_ptr<EvolutionTree> evolution_tree);
+
+    std::shared_ptr<EvolutionTree> evolution_tree;
+    std::unordered_map<int, std::shared_ptr<EvolutionTree>> id_to_subree;
+
+private:
+    void SaveSubtree(std::shared_ptr<EvolutionTree> evolution_tree);
+};
+
 std::shared_ptr<EvolutionTree> BuildRawTree(
     const std::string& bracket_representation,
-    std::shared_ptr<int> pos = nullptr);
+    int edgeCount,
+    std::shared_ptr<int> pos = nullptr,
+    std::shared_ptr<Graph> completeGraph = nullptr);
 
-void FillStructures(std::shared_ptr<EvolutionTree> evolution_tree);
+void FillStructure(
+    const std::string& structure,
+    std::shared_ptr<EvolutionTree> evolution_subtree);
 
-void PrintBracketRepresentation(std::ostream& stream, std::shared_ptr<EvolutionTree> evolution_tree);
+void PrintBracketRepresentation(
+    std::ostream& stream,
+    std::shared_ptr<EvolutionTree> evolution_tree);
+
+void PrintStructure(
+    std::ostream& stream,
+    std::shared_ptr<EvolutionTree> evolution_subtree);

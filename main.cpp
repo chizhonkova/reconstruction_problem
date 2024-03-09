@@ -26,18 +26,43 @@ int main(int argc, char* argv[])
     std::ifstream in(input_filename);
     std::string bracket_representation;
     if (!std::getline(in, bracket_representation)) {
-        std::cout << "no bracket sequence is given" << std::endl;
-        return -1;
+        throw "no bracket sequence is given";
     }
+
+    int edgeCount = 0;
+    in >> edgeCount;
+    std::cout << "Edge count: " << edgeCount << std::endl;
 
     std::cout << "Building raw tree ..." << std::endl;
 
-    auto tree = BuildRawTree(bracket_representation);
+    auto tree = BuildRawTree(bracket_representation, edgeCount);
+
+    Reconstruction reconstruction(tree);
+
+    std::cout << "Building structures ..." << std::endl;
+
+    int leaf_id, structureCount;
+    std::string structure;
+    while(in >> leaf_id >> structureCount) {
+        std::getline(in, structure);
+        for (int i = 0; i < structureCount; ++i) {
+            if (!std::getline(in, structure)) {
+                std::cout << "no structure is given" << std::endl;
+                throw "no structure is given";
+            }
+            FillStructure(structure, reconstruction.id_to_subree[leaf_id]);
+        }
+    }
 
     std::cout << "Saving data in " << output_filename << " ..." << std::endl;
 
     std::ofstream out(output_filename);
     PrintBracketRepresentation(out, tree);
+    out << std::endl;
+
+    for (const auto& [id, subtree] : reconstruction.id_to_subree) {
+        PrintStructure(out, subtree);
+    }
 
     std::cout << "Done!" << std::endl;
 
