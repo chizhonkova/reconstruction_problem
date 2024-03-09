@@ -29,23 +29,23 @@ int main(int argc, char* argv[])
         throw "no bracket sequence is given";
     }
 
-    int edgeCount = 0;
-    in >> edgeCount;
-    std::cout << "Edge count: " << edgeCount << std::endl;
+    int edge_count = 0;
+    in >> edge_count;
+    std::cout << "Edge count: " << edge_count << std::endl;
 
     std::cout << "Building raw tree ..." << std::endl;
 
-    auto tree = BuildRawTree(bracket_representation, edgeCount);
+    auto tree = BuildRawTree(bracket_representation, edge_count);
 
     Reconstruction reconstruction(tree);
 
     std::cout << "Building structures ..." << std::endl;
 
-    int leaf_id, structureCount;
+    int leaf_id, structe_count;
     std::string structure;
-    while(in >> leaf_id >> structureCount) {
+    while(in >> leaf_id >> structe_count) {
         std::getline(in, structure);
-        for (int i = 0; i < structureCount; ++i) {
+        for (int i = 0; i < structe_count; ++i) {
             if (!std::getline(in, structure)) {
                 std::cout << "no structure is given" << std::endl;
                 throw "no structure is given";
@@ -53,6 +53,8 @@ int main(int argc, char* argv[])
             FillStructure(structure, reconstruction.id_to_subree[leaf_id]);
         }
     }
+
+    InitInnerStructes(tree, edge_count);
 
     std::cout << "Saving data in " << output_filename << " ..." << std::endl;
 

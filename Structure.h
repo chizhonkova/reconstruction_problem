@@ -12,5 +12,6 @@ public:
     std::shared_ptr<Graph> graph;
     std::vector<double> costs;
     std::unordered_set<int> matching;
+    std::unordered_set<int> loops;
 private:
 };

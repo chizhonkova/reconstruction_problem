@@ -34,13 +34,17 @@ private:
 
 std::shared_ptr<EvolutionTree> BuildRawTree(
     const std::string& bracket_representation,
-    int edgeCount,
+    int edge_count,
     std::shared_ptr<int> pos = nullptr,
-    std::shared_ptr<Graph> completeGraph = nullptr);
+    std::shared_ptr<Graph> complete_graph = nullptr);
 
 void FillStructure(
     const std::string& structure,
     std::shared_ptr<EvolutionTree> evolution_subtree);
+
+void InitInnerStructes(
+    std::shared_ptr<EvolutionTree> evolution_tree,
+    int edge_count);
 
 void PrintBracketRepresentation(
     std::ostream& stream,

@@ -21,14 +21,14 @@ void Reconstruction::SaveSubtree(std::shared_ptr<EvolutionTree> evolution_tree)
     }
 }
 
-std::shared_ptr<Graph> BuildCompleteGraph(int edgeCount)
+std::shared_ptr<Graph> BuildCompleteGraph(int edge_count)
 {
     auto graph = std::make_shared<Graph>();
-    for (int i = 0; i < 2 * edgeCount; ++i) {
+    for (int i = 0; i < 2 * edge_count; ++i) {
         graph->AddVertex();
     }
-    for (int i = 0; i < 2 * edgeCount; ++i) {
-        for (int j = i + 1; j < 2 * edgeCount; ++j) {
+    for (int i = 0; i < 2 * edge_count; ++i) {
+        for (int j = i + 1; j < 2 * edge_count; ++j) {
             graph->AddEdge(i, j);
         }
     }
@@ -37,16 +37,16 @@ std::shared_ptr<Graph> BuildCompleteGraph(int edgeCount)
 
 std::shared_ptr<EvolutionTree> BuildRawTree(
     const std::string& bracket_representation,
-    int edgeCount,
+    int edge_count,
     std::shared_ptr<int> pos,
-    std::shared_ptr<Graph> completeGraph)
+    std::shared_ptr<Graph> complete_graph)
 {
     if (pos == nullptr) {
-        pos = std::make_unique<int>(0);
+        pos = std::make_shared<int>(0);
     }
 
-    if (completeGraph == nullptr) {
-        completeGraph = BuildCompleteGraph(edgeCount);
+    if (complete_graph == nullptr) {
+        complete_graph = BuildCompleteGraph(edge_count);
     }
 
     if (bracket_representation.empty() ||
@@ -66,15 +66,15 @@ std::shared_ptr<EvolutionTree> BuildRawTree(
     }
 
     auto root = std::make_shared<EvolutionTree>(root_id);
-    root->structure.graph = completeGraph;
-    root->structure.costs = std::vector<double>(edgeCount * (2 * edgeCount - 1), 0);
+    root->structure.graph = complete_graph;
+    root->structure.costs = std::vector<double>(edge_count * (2 * edge_count - 1), 0);
 
     // Build children.
     while (*pos < bracket_representation.size() &&
         bracket_representation[*pos] == '(')
     {
         *pos = *pos + 1;
-        auto child = BuildRawTree(bracket_representation, edgeCount, pos, completeGraph);
+        auto child = BuildRawTree(bracket_representation, edge_count, pos, complete_graph);
         if (child != nullptr) {
             root->children[child->root_id] = child;
             child->parent = root;
@@ -148,6 +148,10 @@ void FillStructure(
 
         auto edge_index = evolution_subtree->structure.graph->GetEdgeIndex(first_start, last_end);
         evolution_subtree->structure.matching.insert(edge_index);
+
+        if (tokens.size() == 2 && tokens.front() == "C") {
+            evolution_subtree->structure.loops.insert(edge_index);
+        }
     }
 
     // Build other edges.
@@ -182,5 +186,26 @@ void PrintStructure(
     for (int edge_index : evolution_subtree->structure.matching) {
         auto [u, v] = evolution_subtree->structure.graph->GetEdge(edge_index);
         stream << u << " " << v << std::endl;
+    }
+}
+
+void InitInnerStructes(
+    std::shared_ptr<EvolutionTree> evolution_tree,
+    int edge_count)
+{
+    if (evolution_tree == nullptr || evolution_tree->children.empty()) {
+        return;
+    }
+
+    for (int i = 1; i <= edge_count; ++i) {
+        auto start = 2 * i - 2;
+        auto end = 2 * i - 1;
+
+        auto edge_index = evolution_tree->structure.graph->GetEdgeIndex(start, end);
+        evolution_tree->structure.matching.insert(edge_index);
+    }
+
+    for (const auto& [_, child] : evolution_tree->children) {
+        InitInnerStructes(child, edge_count);
     }
 }
