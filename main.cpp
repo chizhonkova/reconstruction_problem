@@ -70,9 +70,15 @@ int main(int argc, char* argv[])
         }
     }
 
+    std::cout << "Solving problem ..." << std::endl;
+
     // Initialize costs and potential matchings.
     reconstruction.CalculateInitialCost(tree);
     reconstruction.CalculatePotentialMatchings();
+
+    reconstruction.Solve();
+
+    double cost = reconstruction.CalculateFinalCost(tree);
 
     std::cout << "Saving data in " << output_filename << " ..." << std::endl;
 
@@ -83,6 +89,9 @@ int main(int argc, char* argv[])
     for (const auto& [id, subtree] : reconstruction.id_to_subtree) {
         PrintStructure(out, subtree);
     }
+
+    out << "Final cost: " << cost << std::endl;
+    std::cout << "Final cost: " << cost << std::endl;
 
     std::cout << "Done!" << std::endl;
 

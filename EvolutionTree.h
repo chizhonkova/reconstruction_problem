@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Structure.h"
+#include "matching/BinaryHeap.h"
 
 #include <ostream>
 #include <string>
@@ -27,9 +28,12 @@ struct Reconstruction
 
     void CalculateInitialCost(std::shared_ptr<EvolutionTree> evolution_tree);
     void CalculatePotentialMatchings();
+    void Solve();
+    double CalculateFinalCost(std::shared_ptr<EvolutionTree> tree);
 
     std::shared_ptr<EvolutionTree> evolution_tree;
     std::unordered_map<int, std::shared_ptr<EvolutionTree>> id_to_subtree;
+    BinaryHeap heap;
     double cut_cost;
     double join_cost;
     double insertion_cost;
@@ -43,6 +47,9 @@ private:
     double GetPNoFromChild(int edge_index, std::shared_ptr<EvolutionTree> child);
     double GetPYesFromParent(int edge_index, std::shared_ptr<EvolutionTree> parent);
     double GetPNoFromParent(int edge_index, std::shared_ptr<EvolutionTree> parent);
+
+    void CalculatePotentialMatching(std::shared_ptr<EvolutionTree> subtree);
+    void CalculateCost(std::shared_ptr<EvolutionTree> subtree);
 
     double CalculateCostFromChild(
         const std::unordered_set<int>& node_matching,

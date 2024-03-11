@@ -39,6 +39,11 @@ int BinaryHeap::Size()
 	return size;
 }
 
+std::pair<double, int> BinaryHeap::GetMin() const
+{
+	return std::make_pair(key[satellite[1]], satellite[1]);
+}
+
 int BinaryHeap::DeleteMin()
 {
 	if(size == 0)

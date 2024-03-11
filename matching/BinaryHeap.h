@@ -14,6 +14,7 @@ class BinaryHeap
 public:
 	BinaryHeap(): satellite(1), size(0) {};
 
+	std::pair<double, int> GetMin() const;
 	//Inserts (key k, satellite s) in the heap
 	void Insert(double k, int s);
 	//Deletes the element with minimum key and returns its satellite information

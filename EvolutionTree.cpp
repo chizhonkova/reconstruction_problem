@@ -264,40 +264,58 @@ void Reconstruction::CalculateInitialCost(std::shared_ptr<EvolutionTree> evoluti
     for (const auto& [_, child] : evolution_tree->children) {
         CalculateInitialCost(child);
 
-        std::unordered_set<int> matching_union = evolution_tree->structure.matching;
-        matching_union.insert(child->structure.matching.begin(), child->structure.matching.end());
+        evolution_tree->structure.current_cost += CalculateCostFromChild(
+            evolution_tree->structure.matching,
+            child->structure.matching,
+            child->structure.loops);
+    }
 
-        // Here we don't need all edges, just union of both matchings.
-        for (int edge_index : matching_union) {
-            if (evolution_tree->structure.matching.contains(edge_index) &&
-                !child->structure.matching.contains(edge_index))
-            {
-                evolution_tree->structure.costs[edge_index] += cut_cost;
-                evolution_tree->structure.current_cost += cut_cost;
-            } else if (!evolution_tree->structure.matching.contains(edge_index) &&
-                child->structure.matching.contains(edge_index) &&
-                child->structure.loops.contains(edge_index))
-            {
-                evolution_tree->structure.costs[edge_index] += deletion_cost;
-                evolution_tree->structure.current_cost += deletion_cost;
-            } else if (!evolution_tree->structure.matching.contains(edge_index) &&
-                child->structure.matching.contains(edge_index))
-            {
-                evolution_tree->structure.costs[edge_index] += join_cost;
-                evolution_tree->structure.current_cost += join_cost;
-            }
-        }
+    if (evolution_tree->parent != nullptr) {
+        evolution_tree->structure.current_cost += CalculateCostFromChild(
+            evolution_tree->parent->structure.matching,
+            evolution_tree->structure.matching,
+            evolution_tree->structure.loops);
     }
 }
 
-void Reconstruction::CalculatePotentialMatchings()
+void Reconstruction::CalculateCost(std::shared_ptr<EvolutionTree> subtree)
 {
-    for (const auto& [_, subtree] : id_to_subtree) {
-        if (subtree->children.empty()) {
-            continue;
-        }
+    if (subtree->children.empty()) {
+        return;
+    }
 
-        auto weights = CalculateWeights(subtree);
+    subtree->structure.current_cost = 0;
+    for (const auto& [_, child] : subtree->children) {
+        subtree->structure.current_cost += CalculateCostFromChild(
+            subtree->structure.matching,
+            child->structure.matching,
+            child->structure.loops);
+    }
+
+    if (subtree->parent != nullptr) {
+        subtree->structure.current_cost += CalculateCostFromChild(
+            subtree->parent->structure.matching,
+            subtree->structure.matching,
+            subtree->structure.loops);
+    }
+}
+
+void Reconstruction::CalculatePotentialMatching(std::shared_ptr<EvolutionTree> subtree)
+{
+    if (subtree->children.empty()) {
+        return;
+    }
+
+    bool noNegative = true;
+    auto weights = CalculateWeights(subtree);
+    for (double weight : weights) {
+        if (weight < 0) {
+            noNegative = false;
+        }
+    }
+
+    subtree->structure.potential_matching = {};
+    if (!noNegative) {
         Matching m(*subtree->structure.graph);
         std::pair<std::list<int>, double> solution = m.SolveMinimumCostPerfectMatching(weights);
 
@@ -306,21 +324,32 @@ void Reconstruction::CalculatePotentialMatchings()
                 subtree->structure.potential_matching.insert(i);
             }
         }
+    }
 
-        subtree->structure.potential_cost = 0;
-        for (const auto& [_, child] : subtree->children) {
-            subtree->structure.potential_cost += CalculateCostFromChild(
-                subtree->structure.potential_matching,
-                child->structure.matching,
-                child->structure.loops);
-        }
+    subtree->structure.potential_cost = 0;
+    for (const auto& [_, child] : subtree->children) {
+        subtree->structure.potential_cost += CalculateCostFromChild(
+            subtree->structure.potential_matching,
+            child->structure.matching,
+            child->structure.loops);
+    }
 
-        if (subtree->parent != nullptr) {
-            subtree->structure.potential_cost += CalculateCostFromChild(
-                subtree->parent->structure.matching,
-                subtree->structure.potential_matching,
-                {});
-        }
+    if (subtree->parent != nullptr) {
+        subtree->structure.potential_cost += CalculateCostFromChild(
+            subtree->parent->structure.matching,
+            subtree->structure.potential_matching,
+            {});
+    }
+}
+
+void Reconstruction::CalculatePotentialMatchings()
+{
+    for (const auto& [_, subtree] : id_to_subtree) {
+        CalculatePotentialMatching(subtree);
+
+        heap.Insert(
+            subtree->structure.potential_cost - subtree->structure.current_cost,
+            subtree->root_id);
     }
 }
 
@@ -383,4 +412,60 @@ std::vector<double> Reconstruction::CalculateWeights(std::shared_ptr<EvolutionTr
     }
 
     return weights;
+}
+
+void Reconstruction::Solve()
+{
+    for (int i = 0; i < 1000; ++i) {
+        if (heap.Size() == 0) {
+            break;
+        }
+
+        int id = heap.DeleteMin();
+        auto subtree = id_to_subtree[id];
+        if (subbtree->structure.current_cost == subtree->structure.potential_cost) {
+            continue;
+        }
+
+        // Change matching.
+        subtree->structure.matching = subtree->structure.potential_matching;
+        subtree->structure.current_cost = subtree->structure.potential_cost;
+
+        // Recalculate structure for neighbours.
+        for (const auto& [_, child] : subtree->children) {
+            CalculateCost(child);
+            CalculatePotentialMatching(child);
+            heap.ChangeKey(
+                child->structure.potential_cost - child->structure.current_cost,
+                child->root_id);
+        }
+
+        if (subtree->parent != nullptr) {
+            CalculateCost(subtree->parent);
+            CalculatePotentialMatching(subtree->parent);
+            heap.ChangeKey(
+                subtree->parent->structure.potential_cost - subtree->parent->structure.current_cost,
+                subtree->parent->root_id);
+        }
+    }
+}
+
+double Reconstruction::CalculateFinalCost(std::shared_ptr<EvolutionTree> tree)
+{
+    if (evolution_tree == nullptr || evolution_tree->children.empty()) {
+        return 0;
+    }
+
+    double cost = 0;
+
+    for (const auto& [_, child] : tree->children) {
+        cost += CalculateFinalCost(child);
+
+        cost += CalculateCostFromChild(
+            tree->structure.matching,
+            child->structure.matching,
+            child->structure.loops);
+    }
+
+    return cost;
 }
