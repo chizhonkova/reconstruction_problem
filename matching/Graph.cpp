@@ -25,6 +25,12 @@ pair<int, int> Graph::GetEdge(int e) const
 	return edges[e];
 }
 
+bool Graph::IsLoop(int e) const
+{
+	auto [u, v] = GetEdge(e);
+	return (u / 2) == (v / 2);
+}
+
 int Graph::GetEdgeIndex(int u, int v) const
 {
 	if( u > n or

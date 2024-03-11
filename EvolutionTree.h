@@ -53,8 +53,7 @@ private:
 
     double CalculateCostFromChild(
         const std::unordered_set<int>& node_matching,
-        const std::unordered_set<int>& child_matching,
-        const std::unordered_set<int>& child_loops);
+        const std::unordered_set<int>& child_matching);
 };
 
 std::shared_ptr<EvolutionTree> BuildRawTree(

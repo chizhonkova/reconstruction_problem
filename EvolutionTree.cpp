@@ -69,7 +69,6 @@ std::shared_ptr<EvolutionTree> BuildRawTree(
 
     auto root = std::make_shared<EvolutionTree>(root_id);
     root->structure.graph = complete_graph;
-    root->structure.costs = std::vector<double>(edge_count * (2 * edge_count - 1), 0);
 
     // Build children.
     while (*pos < bracket_representation.size() &&
@@ -130,7 +129,7 @@ void FillStructure(
     }
 
     // For cycle structure first_start and last_end points should be united.
-    if (tokens.front() == "C" || tokens.size() == 2) {
+    if (tokens.front() == "C") {
         int first = std::atoi(tokens[1].c_str());
         bool firstReversed = (tokens[1].back() == '\'');
         int last = std::atoi(tokens.back().c_str());
@@ -150,10 +149,6 @@ void FillStructure(
 
         auto edge_index = evolution_subtree->structure.graph->GetEdgeIndex(first_start, last_end);
         evolution_subtree->structure.matching.insert(edge_index);
-
-        if (tokens.size() == 2 && tokens.front() == "C") {
-            evolution_subtree->structure.loops.insert(edge_index);
-        }
     }
 
     // Build other edges.
@@ -203,8 +198,7 @@ void PrintStructure(
 
 double Reconstruction::CalculateCostFromChild(
     const std::unordered_set<int>& node_matching,
-    const std::unordered_set<int>& child_matching,
-    const std::unordered_set<int>& child_loops)
+    const std::unordered_set<int>& child_matching)
 {
     std::unordered_set<int> matching_union = node_matching;
     matching_union.insert(child_matching.begin(), child_matching.end());
@@ -216,16 +210,19 @@ double Reconstruction::CalculateCostFromChild(
         if (node_matching.contains(edge_index) &&
             !child_matching.contains(edge_index))
         {
-            cost += cut_cost;
-        } else if (!node_matching.contains(edge_index) &&
-            child_matching.contains(edge_index) &&
-            child_loops.contains(edge_index))
-        {
-            cost += deletion_cost;
+            if (evolution_tree->structure.graph->IsLoop(edge_index)) {
+                cost += insertion_cost;
+            } else {
+                cost += cut_cost;
+            }
         } else if (!node_matching.contains(edge_index) &&
             child_matching.contains(edge_index))
         {
-            cost += join_cost;
+            if (evolution_tree->structure.graph->IsLoop(edge_index)) {
+                cost += deletion_cost;
+            } else {
+                cost += join_cost;
+            }
         }
     }
 
@@ -255,15 +252,13 @@ void Reconstruction::CalculateCost(std::shared_ptr<EvolutionTree> subtree)
     for (const auto& [_, child] : subtree->children) {
         subtree->structure.current_cost += CalculateCostFromChild(
             subtree->structure.matching,
-            child->structure.matching,
-            child->structure.loops);
+            child->structure.matching);
     }
 
     if (subtree->parent != nullptr) {
         subtree->structure.current_cost += CalculateCostFromChild(
             subtree->parent->structure.matching,
-            subtree->structure.matching,
-            subtree->structure.loops);
+            subtree->structure.matching);
     }
 }
 
@@ -297,15 +292,13 @@ void Reconstruction::CalculatePotentialMatching(std::shared_ptr<EvolutionTree> s
     for (const auto& [_, child] : subtree->children) {
         subtree->structure.potential_cost += CalculateCostFromChild(
             subtree->structure.potential_matching,
-            child->structure.matching,
-            child->structure.loops);
+            child->structure.matching);
     }
 
     if (subtree->parent != nullptr) {
         subtree->structure.potential_cost += CalculateCostFromChild(
             subtree->parent->structure.matching,
-            subtree->structure.potential_matching,
-            {});
+            subtree->structure.potential_matching);
     }
 }
 
@@ -435,8 +428,7 @@ double Reconstruction::CalculateFinalCost(std::shared_ptr<EvolutionTree> tree)
 
         cost += CalculateCostFromChild(
             tree->structure.matching,
-            child->structure.matching,
-            child->structure.loops);
+            child->structure.matching);
     }
 
     return cost;

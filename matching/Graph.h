@@ -21,6 +21,7 @@ public:
 
 	//Given the edge's index, returns its endpoints as a pair
 	pair<int, int> GetEdge(int e) const;
+	bool IsLoop(int e) const;
 	//Given the endpoints, returns the index
 	int GetEdgeIndex(int u, int v) const;
 
