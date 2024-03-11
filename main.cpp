@@ -24,7 +24,18 @@ int main(int argc, char* argv[])
     }
 
     std::ifstream in(input_filename);
+
+    double cut_cost, join_cost, insertion_cost, deletion_cost;
+    in >> cut_cost >> join_cost >> insertion_cost >> deletion_cost;
+
+    std::cout << "Cut cost: " << cut_cost << std::endl;
+    std::cout << "Join cost: " << join_cost << std::endl;
+    std::cout << "Insertion cost: " << insertion_cost << std::endl;
+    std::cout << "Deletion cost: " << deletion_cost << std::endl;
+
     std::string bracket_representation;
+    // Skip line.
+    std::getline(in, bracket_representation);
     if (!std::getline(in, bracket_representation)) {
         throw "no bracket sequence is given";
     }
@@ -38,23 +49,30 @@ int main(int argc, char* argv[])
     auto tree = BuildRawTree(bracket_representation, edge_count);
 
     Reconstruction reconstruction(tree);
+    reconstruction.cut_cost = cut_cost;
+    reconstruction.join_cost = join_cost;
+    reconstruction.insertion_cost = insertion_cost;
+    reconstruction.deletion_cost = deletion_cost;
 
     std::cout << "Building structures ..." << std::endl;
 
     int leaf_id, structe_count;
     std::string structure;
     while(in >> leaf_id >> structe_count) {
+        // Skip line.
         std::getline(in, structure);
         for (int i = 0; i < structe_count; ++i) {
             if (!std::getline(in, structure)) {
                 std::cout << "no structure is given" << std::endl;
                 throw "no structure is given";
             }
-            FillStructure(structure, reconstruction.id_to_subree[leaf_id]);
+            FillStructure(structure, reconstruction.id_to_subtree[leaf_id]);
         }
     }
 
-    InitInnerStructes(tree, edge_count);
+    // Initialize costs and potential matchings.
+    reconstruction.CalculateInitialCost(tree);
+    reconstruction.CalculatePotentialMatchings();
 
     std::cout << "Saving data in " << output_filename << " ..." << std::endl;
 
@@ -62,7 +80,7 @@ int main(int argc, char* argv[])
     PrintBracketRepresentation(out, tree);
     out << std::endl;
 
-    for (const auto& [id, subtree] : reconstruction.id_to_subree) {
+    for (const auto& [id, subtree] : reconstruction.id_to_subtree) {
         PrintStructure(out, subtree);
     }
 

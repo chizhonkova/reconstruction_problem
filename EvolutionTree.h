@@ -25,11 +25,29 @@ struct Reconstruction
 {
     Reconstruction(std::shared_ptr<EvolutionTree> evolution_tree);
 
+    void CalculateInitialCost(std::shared_ptr<EvolutionTree> evolution_tree);
+    void CalculatePotentialMatchings();
+
     std::shared_ptr<EvolutionTree> evolution_tree;
-    std::unordered_map<int, std::shared_ptr<EvolutionTree>> id_to_subree;
+    std::unordered_map<int, std::shared_ptr<EvolutionTree>> id_to_subtree;
+    double cut_cost;
+    double join_cost;
+    double insertion_cost;
+    double deletion_cost;
 
 private:
     void SaveSubtree(std::shared_ptr<EvolutionTree> evolution_tree);
+    std::vector<double> CalculateWeights(std::shared_ptr<EvolutionTree> evolution_tree);
+
+    double GetPYesFromChild(int edge_index, std::shared_ptr<EvolutionTree> child);
+    double GetPNoFromChild(int edge_index, std::shared_ptr<EvolutionTree> child);
+    double GetPYesFromParent(int edge_index, std::shared_ptr<EvolutionTree> parent);
+    double GetPNoFromParent(int edge_index, std::shared_ptr<EvolutionTree> parent);
+
+    double CalculateCostFromChild(
+        const std::unordered_set<int>& node_matching,
+        const std::unordered_set<int>& child_matching,
+        const std::unordered_set<int>& child_loops);
 };
 
 std::shared_ptr<EvolutionTree> BuildRawTree(

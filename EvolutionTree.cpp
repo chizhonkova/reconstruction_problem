@@ -1,5 +1,7 @@
 #include "EvolutionTree.h"
 
+#include "matching/Matching.h"
+
 #include <iostream>
 
 Reconstruction::Reconstruction(std::shared_ptr<EvolutionTree> evolution_tree)
@@ -14,7 +16,7 @@ void Reconstruction::SaveSubtree(std::shared_ptr<EvolutionTree> evolution_tree)
         return;
     }
 
-    id_to_subree[evolution_tree->root_id] = evolution_tree;
+    id_to_subtree[evolution_tree->root_id] = evolution_tree;
 
     for (const auto& [_, child] : evolution_tree->children) {
         SaveSubtree(child);
@@ -183,10 +185,20 @@ void PrintStructure(
     std::shared_ptr<EvolutionTree> evolution_subtree)
 {
     stream << evolution_subtree->root_id << std::endl;
+    stream << "Cost: " << evolution_subtree->structure.current_cost << std::endl;
+    stream << "Potential cost: " << evolution_subtree->structure.potential_cost << std::endl;
+
     for (int edge_index : evolution_subtree->structure.matching) {
         auto [u, v] = evolution_subtree->structure.graph->GetEdge(edge_index);
         stream << u << " " << v << std::endl;
     }
+
+    stream << "Potential matching:" << std::endl;
+    for (int edge_index : evolution_subtree->structure.potential_matching) {
+        auto [u, v] = evolution_subtree->structure.graph->GetEdge(edge_index);
+        stream << u << " " << v << std::endl;
+    }
+    stream << std::endl;
 }
 
 void InitInnerStructes(
@@ -208,4 +220,167 @@ void InitInnerStructes(
     for (const auto& [_, child] : evolution_tree->children) {
         InitInnerStructes(child, edge_count);
     }
+}
+
+double Reconstruction::CalculateCostFromChild(
+    const std::unordered_set<int>& node_matching,
+    const std::unordered_set<int>& child_matching,
+    const std::unordered_set<int>& child_loops)
+{
+    std::unordered_set<int> matching_union = node_matching;
+    matching_union.insert(child_matching.begin(), child_matching.end());
+
+    double cost = 0;
+
+    // Here we don't need all edges, just union of both matchings.
+    for (int edge_index : matching_union) {
+        if (node_matching.contains(edge_index) &&
+            !child_matching.contains(edge_index))
+        {
+            cost += cut_cost;
+        } else if (!node_matching.contains(edge_index) &&
+            child_matching.contains(edge_index) &&
+            child_loops.contains(edge_index))
+        {
+            cost += deletion_cost;
+        } else if (!node_matching.contains(edge_index) &&
+            child_matching.contains(edge_index))
+        {
+            cost += join_cost;
+        }
+    }
+
+    return cost;
+}
+
+void Reconstruction::CalculateInitialCost(std::shared_ptr<EvolutionTree> evolution_tree)
+{
+    if (evolution_tree == nullptr || evolution_tree->children.empty()) {
+        return;
+    }
+
+    int edge_count = evolution_tree->structure.graph->GetNumEdges();
+
+    for (const auto& [_, child] : evolution_tree->children) {
+        CalculateInitialCost(child);
+
+        std::unordered_set<int> matching_union = evolution_tree->structure.matching;
+        matching_union.insert(child->structure.matching.begin(), child->structure.matching.end());
+
+        // Here we don't need all edges, just union of both matchings.
+        for (int edge_index : matching_union) {
+            if (evolution_tree->structure.matching.contains(edge_index) &&
+                !child->structure.matching.contains(edge_index))
+            {
+                evolution_tree->structure.costs[edge_index] += cut_cost;
+                evolution_tree->structure.current_cost += cut_cost;
+            } else if (!evolution_tree->structure.matching.contains(edge_index) &&
+                child->structure.matching.contains(edge_index) &&
+                child->structure.loops.contains(edge_index))
+            {
+                evolution_tree->structure.costs[edge_index] += deletion_cost;
+                evolution_tree->structure.current_cost += deletion_cost;
+            } else if (!evolution_tree->structure.matching.contains(edge_index) &&
+                child->structure.matching.contains(edge_index))
+            {
+                evolution_tree->structure.costs[edge_index] += join_cost;
+                evolution_tree->structure.current_cost += join_cost;
+            }
+        }
+    }
+}
+
+void Reconstruction::CalculatePotentialMatchings()
+{
+    for (const auto& [_, subtree] : id_to_subtree) {
+        if (subtree->children.empty()) {
+            continue;
+        }
+
+        auto weights = CalculateWeights(subtree);
+        Matching m(*subtree->structure.graph);
+        std::pair<std::list<int>, double> solution = m.SolveMinimumCostPerfectMatching(weights);
+
+        for (int i : solution.first) {
+            if (weights[i] < 0) {
+                subtree->structure.potential_matching.insert(i);
+            }
+        }
+
+        subtree->structure.potential_cost = 0;
+        for (const auto& [_, child] : subtree->children) {
+            subtree->structure.potential_cost += CalculateCostFromChild(
+                subtree->structure.potential_matching,
+                child->structure.matching,
+                child->structure.loops);
+        }
+
+        if (subtree->parent != nullptr) {
+            subtree->structure.potential_cost += CalculateCostFromChild(
+                subtree->parent->structure.matching,
+                subtree->structure.potential_matching,
+                {});
+        }
+    }
+}
+
+double Reconstruction::GetPYesFromChild(int edge_index, std::shared_ptr<EvolutionTree> child)
+{
+    if (child->structure.matching.contains(edge_index)) {
+        return 0;
+    } else {
+        return cut_cost;
+    }
+}
+
+double Reconstruction::GetPNoFromChild(int edge_index, std::shared_ptr<EvolutionTree> child)
+{
+    if (child->structure.matching.contains(edge_index)) {
+        return join_cost;
+    } else {
+        return 0;
+    }
+}
+
+double Reconstruction::GetPYesFromParent(int edge_index, std::shared_ptr<EvolutionTree> parent)
+{
+    if (parent->structure.matching.contains(edge_index)) {
+        return 0;
+    } else {
+        return join_cost;
+    }
+}
+
+double Reconstruction::GetPNoFromParent(int edge_index, std::shared_ptr<EvolutionTree> parent)
+{
+    if (parent->structure.matching.contains(edge_index)) {
+        return cut_cost;
+    } else {
+        return 0;
+    }
+}
+
+std::vector<double> Reconstruction::CalculateWeights(std::shared_ptr<EvolutionTree> evolution_tree)
+{
+    auto edge_count = evolution_tree->structure.graph->GetNumEdges();
+    std::vector<double> weights(edge_count, 0);
+
+    for (int i = 0; i < edge_count; ++i) {
+        double p_yes = 0;
+        double p_no = 0;
+
+        for (const auto& [_, child] : evolution_tree->children) {
+            p_yes += GetPYesFromChild(i, child);
+            p_no += GetPNoFromChild(i, child);
+        }
+
+        if (evolution_tree->parent != nullptr) {
+            p_yes += GetPYesFromParent(i, evolution_tree->parent);
+            p_no += GetPNoFromParent(i, evolution_tree->parent);
+        }
+
+        weights[i] = p_yes - p_no;
+    }
+
+    return weights;
 }

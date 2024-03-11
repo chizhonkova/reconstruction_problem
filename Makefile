@@ -1,2 +1,2 @@
-reconstruction: EvolutionTree.cpp matching/Graph.cpp main.cpp 
-	g++ -std=c++20 -o reconstruction EvolutionTree.cpp matching/Graph.cpp main.cpp
+reconstruction: EvolutionTree.cpp matching/Graph.cpp matching/Matching.cpp matching/BinaryHeap.cpp main.cpp 
+	g++ -std=c++20 -o reconstruction EvolutionTree.cpp matching/Graph.cpp matching/Matching.cpp matching/BinaryHeap.cpp main.cpp
