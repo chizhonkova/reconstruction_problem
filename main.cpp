@@ -72,12 +72,7 @@ int main(int argc, char* argv[])
 
     std::cout << "Solving problem ..." << std::endl;
 
-    // Initialize costs and potential matchings.
-    reconstruction.CalculateInitialCost(tree);
-    reconstruction.CalculatePotentialMatchings();
-
     reconstruction.Solve();
-
     double cost = reconstruction.CalculateFinalCost(tree);
 
     std::cout << "Saving data in " << output_filename << " ..." << std::endl;
@@ -92,7 +87,6 @@ int main(int argc, char* argv[])
 
     out << "Final cost: " << cost << std::endl;
     std::cout << "Final cost: " << cost << std::endl;
-
     std::cout << "Done!" << std::endl;
 
     return 0;

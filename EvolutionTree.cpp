@@ -185,7 +185,7 @@ void PrintStructure(
     std::shared_ptr<EvolutionTree> evolution_subtree)
 {
     stream << evolution_subtree->root_id << std::endl;
-    stream << "Cost: " << evolution_subtree->structure.current_cost << std::endl;
+    stream << "Current cost: " << evolution_subtree->structure.current_cost << std::endl;
     stream << "Potential cost: " << evolution_subtree->structure.potential_cost << std::endl;
 
     for (int edge_index : evolution_subtree->structure.matching) {
@@ -199,27 +199,6 @@ void PrintStructure(
         stream << u << " " << v << std::endl;
     }
     stream << std::endl;
-}
-
-void InitInnerStructes(
-    std::shared_ptr<EvolutionTree> evolution_tree,
-    int edge_count)
-{
-    if (evolution_tree == nullptr || evolution_tree->children.empty()) {
-        return;
-    }
-
-    for (int i = 1; i <= edge_count; ++i) {
-        auto start = 2 * i - 2;
-        auto end = 2 * i - 1;
-
-        auto edge_index = evolution_tree->structure.graph->GetEdgeIndex(start, end);
-        evolution_tree->structure.matching.insert(edge_index);
-    }
-
-    for (const auto& [_, child] : evolution_tree->children) {
-        InitInnerStructes(child, edge_count);
-    }
 }
 
 double Reconstruction::CalculateCostFromChild(
@@ -259,23 +238,11 @@ void Reconstruction::CalculateInitialCost(std::shared_ptr<EvolutionTree> evoluti
         return;
     }
 
-    int edge_count = evolution_tree->structure.graph->GetNumEdges();
-
     for (const auto& [_, child] : evolution_tree->children) {
         CalculateInitialCost(child);
-
-        evolution_tree->structure.current_cost += CalculateCostFromChild(
-            evolution_tree->structure.matching,
-            child->structure.matching,
-            child->structure.loops);
     }
 
-    if (evolution_tree->parent != nullptr) {
-        evolution_tree->structure.current_cost += CalculateCostFromChild(
-            evolution_tree->parent->structure.matching,
-            evolution_tree->structure.matching,
-            evolution_tree->structure.loops);
-    }
+    CalculateCost(evolution_tree);
 }
 
 void Reconstruction::CalculateCost(std::shared_ptr<EvolutionTree> subtree)
@@ -416,6 +383,9 @@ std::vector<double> Reconstruction::CalculateWeights(std::shared_ptr<EvolutionTr
 
 void Reconstruction::Solve()
 {
+    CalculateInitialCost(evolution_tree);
+    CalculatePotentialMatchings();
+
     for (int i = 0; i < 1000; ++i) {
         if (heap.Size() == 0) {
             break;

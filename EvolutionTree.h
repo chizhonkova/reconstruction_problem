@@ -67,10 +67,6 @@ void FillStructure(
     const std::string& structure,
     std::shared_ptr<EvolutionTree> evolution_subtree);
 
-void InitInnerStructes(
-    std::shared_ptr<EvolutionTree> evolution_tree,
-    int edge_count);
-
 void PrintBracketRepresentation(
     std::ostream& stream,
     std::shared_ptr<EvolutionTree> evolution_tree);
