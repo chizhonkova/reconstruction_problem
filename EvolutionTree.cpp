@@ -421,15 +421,17 @@ void Reconstruction::Solve()
             break;
         }
 
-        int id = heap.DeleteMin();
-        auto subtree = id_to_subtree[id];
-        if (subbtree->structure.current_cost == subtree->structure.potential_cost) {
-            continue;
+        auto [dif, id] = heap.GetMin();
+        if (dif == 0) {
+            break;
         }
+
+        auto subtree = id_to_subtree[id];
 
         // Change matching.
         subtree->structure.matching = subtree->structure.potential_matching;
         subtree->structure.current_cost = subtree->structure.potential_cost;
+        heap.ChangeKey(0, id);
 
         // Recalculate structure for neighbours.
         for (const auto& [_, child] : subtree->children) {

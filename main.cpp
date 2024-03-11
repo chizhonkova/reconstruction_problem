@@ -7,16 +7,16 @@ int main(int argc, char* argv[])
 {
     std::string input_filename, output_filename;
     int i = 1;
-	while(i < argc)
-	{
-		std::string a(argv[i]);
-		if(a == "--input"){
-			input_filename = argv[++i];
+    while(i < argc)
+    {
+        std::string a(argv[i]);
+        if(a == "--input"){
+            input_filename = argv[++i];
         } else if (a == "--output") {
             output_filename = argv[++i];
         }
-		i++;
-	}
+        i++;
+    }
     
     if (input_filename.empty() || output_filename.empty()) {
         std::cout << "usage: ./reconstruction --input input-filename --output output-filename" << std::endl;
