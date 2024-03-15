@@ -3,6 +3,7 @@
 #include "matching/Matching.h"
 
 #include <iostream>
+#include <queue>
 
 Reconstruction::Reconstruction(std::shared_ptr<EvolutionTree> evolution_tree)
     : evolution_tree(evolution_tree)
@@ -175,6 +176,127 @@ void FillStructure(
     }
 }
 
+int GetEnd(int start) {
+    int edge = start / 2 + 1;
+    if (start % 2 == 0) {
+        return 2 * edge - 1;
+    }
+    return 2 * edge - 2;
+}
+
+void AddNextEdge(
+    int start,
+    std::string& repr)
+{
+    int end = GetEnd(start);
+    int edge = start / 2 + 1;
+
+    repr += "|" + std::to_string(edge);
+    if (start > end) {
+        repr += "'";
+    }
+}
+
+void AddPrevEdge(
+    int end,
+    std::string& repr)
+{
+    int start = GetEnd(end);
+    int edge = start / 2 + 1;
+    std::string token = "|" + std::to_string(edge);
+    if (start > end) {
+        token += "'";
+    }
+    repr = token + repr;
+}
+
+void AddType(const Graph& graph, int start, int end, std::string& repr)
+{
+    if (graph.AdjMat()[start][end]) {
+        repr = "C" + repr;
+    } else {
+        repr = "L" + repr;
+    }
+}
+
+std::string NextStructure(
+    const Graph& graph,
+    std::unordered_set<int>& not_visited)
+{
+    std::string repr;
+
+    std::queue<int> queue;
+    int u = *not_visited.begin();
+    int v = GetEnd(u);
+    if (u > v) {
+        std::swap(u, v);
+    }
+    queue.push(u);
+
+    // Move forward.
+    while (!queue.empty()) {
+        int start = queue.front();
+        queue.pop();
+        AddNextEdge(start, repr);
+        not_visited.erase(start);
+
+        int end = GetEnd(start);
+        v = end;
+        not_visited.erase(end);
+
+        const auto& adjList = graph.AdjList(end);
+        if (adjList.size() > 1) {
+            std::cout << "bad adjList size" << std::endl;
+            throw "bad adjList size";
+        }
+        for (int next : adjList) {
+            if (not_visited.contains(next)) {
+                queue.push(next);
+            }
+        }
+    }
+
+    // Move backward.
+    const auto& adjList = graph.AdjList(u);
+    if (adjList.size() == 0) {
+        AddType(graph, u, v, repr);
+        return repr;
+    }
+
+    int prev = adjList.front();
+    if (!not_visited.contains(prev)) {
+        AddType(graph, u, v, repr);
+        return repr;
+    }
+
+    queue.push(prev);
+
+    while(!queue.empty()) {
+        int start = queue.front();
+        queue.pop();
+        AddPrevEdge(start, repr);
+        not_visited.erase(start);
+
+        int end = GetEnd(start);
+        u = end;
+        not_visited.erase(end);
+
+        const auto& adjList = graph.AdjList(end);
+        if (adjList.size() > 1) {
+            std::cout << "bad adjList size" << std::endl;
+            throw "bad adjList size";
+        }
+        for (int next : adjList) {
+            if (not_visited.contains(next)) {
+                queue.push(next);
+            }
+        }
+    }
+
+    AddType(graph, u, v, repr);
+    return repr;
+}
+
 void PrintStructure(
     std::ostream& stream,
     std::shared_ptr<EvolutionTree> evolution_subtree)
@@ -183,16 +305,32 @@ void PrintStructure(
     stream << "Current cost: " << evolution_subtree->structure.current_cost << std::endl;
     stream << "Potential cost: " << evolution_subtree->structure.potential_cost << std::endl;
 
+    stream << "Current matching:" << std::endl;
     for (int edge_index : evolution_subtree->structure.matching) {
         auto [u, v] = evolution_subtree->structure.graph->GetEdge(edge_index);
         stream << u << " " << v << std::endl;
     }
 
-    stream << "Potential matching:" << std::endl;
-    for (int edge_index : evolution_subtree->structure.potential_matching) {
-        auto [u, v] = evolution_subtree->structure.graph->GetEdge(edge_index);
-        stream << u << " " << v << std::endl;
+    Graph graph;
+    for (int i = 0; i < evolution_subtree->structure.graph->GetNumVertices(); ++i) {
+        graph.AddVertex();
     }
+    for (int edge_index : evolution_subtree->structure.matching) {
+        auto [u, v] = evolution_subtree->structure.graph->GetEdge(edge_index);
+        graph.AddEdge(u, v);
+    }
+
+    std::unordered_set<int> not_visited;
+    for (int i = 0; i < graph.GetNumVertices(); ++i) {
+        not_visited.insert(i);
+    }
+
+    stream << "Structure:" << std::endl;
+    while (!not_visited.empty()) {
+        auto repr = NextStructure(graph, not_visited);
+        stream << repr << std::endl;
+    }
+
     stream << std::endl;
 }
 
