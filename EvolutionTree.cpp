@@ -303,9 +303,11 @@ void PrintStructure(
 {
     stream << evolution_subtree->root_id << std::endl;
     stream << "Current cost: " << evolution_subtree->structure.current_cost << std::endl;
-    stream << "Potential cost: " << evolution_subtree->structure.potential_cost << std::endl;
 
     stream << "Current matching:" << std::endl;
+    if (evolution_subtree->structure.matching.empty()) {
+        stream << "Empty" << std::endl;
+    }
     for (int edge_index : evolution_subtree->structure.matching) {
         auto [u, v] = evolution_subtree->structure.graph->GetEdge(edge_index);
         stream << u << " " << v << std::endl;
@@ -536,6 +538,9 @@ void Reconstruction::Solve()
 
         // Recalculate structure for neighbours.
         for (const auto& [_, child] : subtree->children) {
+            if (child->children.empty()) {
+                continue;
+            }
             CalculateCost(child);
             CalculatePotentialMatching(child);
             heap.ChangeKey(
