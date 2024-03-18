@@ -556,6 +556,11 @@ void Reconstruction::Solve()
                 subtree->parent->root_id);
         }
     }
+
+    auto [dif, id] = heap.GetMin();
+    if (dif != 0) {
+        std::cout << "There are some nodes with non-null potential cost" << std::endl;
+    }
 }
 
 double Reconstruction::CalculateFinalCost(std::shared_ptr<EvolutionTree> tree)
