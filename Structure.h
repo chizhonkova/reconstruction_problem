@@ -2,6 +2,7 @@
 
 #include "matching/Graph.h"
 
+#include <memory>
 #include <unordered_set>
 #include <utility>
 
