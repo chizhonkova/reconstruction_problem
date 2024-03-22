@@ -1,5 +1,6 @@
 #include "EvolutionTree.h"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
@@ -88,6 +89,17 @@ int main(int argc, char* argv[])
     out << "Final cost: " << cost << std::endl;
     std::cout << "Final cost: " << cost << std::endl;
     std::cout << "Done!" << std::endl;
+
+    out.flush();
+    out.close();
+    
+    std::cout << "Output file content: " << std::endl;
+    std::ifstream f(output_filename);
+    if (f.is_open()) {
+        std::cout << f.rdbuf() << std::endl;
+    }
+
+    std::cout << "Output absolute path: " << std::filesystem::absolute(output_filename) << std::endl;
 
     return 0;
 }
