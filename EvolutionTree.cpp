@@ -304,15 +304,6 @@ void PrintStructure(
     stream << evolution_subtree->root_id << std::endl;
     stream << "Current cost: " << evolution_subtree->structure.current_cost << std::endl;
 
-    stream << "Current matching:" << std::endl;
-    if (evolution_subtree->structure.matching.empty()) {
-        stream << "Empty" << std::endl;
-    }
-    for (int edge_index : evolution_subtree->structure.matching) {
-        auto [u, v] = evolution_subtree->structure.graph->GetEdge(edge_index);
-        stream << u << " " << v << std::endl;
-    }
-
     Graph graph;
     for (int i = 0; i < evolution_subtree->structure.graph->GetNumVertices(); ++i) {
         graph.AddVertex();
@@ -458,6 +449,9 @@ double Reconstruction::GetPYesFromChild(int edge_index, std::shared_ptr<Evolutio
     if (child->structure.matching.contains(edge_index)) {
         return 0;
     } else {
+        if (child->structure.graph->IsLoop(edge_index)) {
+            return insertion_cost;
+        }
         return cut_cost;
     }
 }
@@ -465,6 +459,9 @@ double Reconstruction::GetPYesFromChild(int edge_index, std::shared_ptr<Evolutio
 double Reconstruction::GetPNoFromChild(int edge_index, std::shared_ptr<EvolutionTree> child)
 {
     if (child->structure.matching.contains(edge_index)) {
+        if (child->structure.graph->IsLoop(edge_index)) {
+            return deletion_cost;
+        }
         return join_cost;
     } else {
         return 0;
@@ -476,6 +473,9 @@ double Reconstruction::GetPYesFromParent(int edge_index, std::shared_ptr<Evoluti
     if (parent->structure.matching.contains(edge_index)) {
         return 0;
     } else {
+        if (parent->structure.graph->IsLoop(edge_index)) {
+            return deletion_cost;
+        }
         return join_cost;
     }
 }
@@ -483,6 +483,9 @@ double Reconstruction::GetPYesFromParent(int edge_index, std::shared_ptr<Evoluti
 double Reconstruction::GetPNoFromParent(int edge_index, std::shared_ptr<EvolutionTree> parent)
 {
     if (parent->structure.matching.contains(edge_index)) {
+        if (parent->structure.graph->IsLoop(edge_index)) {
+            return insertion_cost;
+        }
         return cut_cost;
     } else {
         return 0;
