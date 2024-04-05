@@ -64,7 +64,10 @@ std::shared_ptr<EvolutionTree> BuildRawTree(
 
 void FillStructure(
     const std::string& structure,
-    std::shared_ptr<EvolutionTree> evolution_subtree);
+    std::shared_ptr<EvolutionTree> evolution_subtree,
+    bool without_erase = false);
+
+void FillLoopStructures(std::shared_ptr<EvolutionTree> evolution_subtree);
 
 void PrintBracketRepresentation(
     std::ostream& stream,

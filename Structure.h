@@ -15,4 +15,6 @@ struct Structure
     std::unordered_set<int> potential_matching;
     double current_cost = 0;
     double potential_cost = 0;
+
+    std::unordered_set<int> not_used_edges;
 };

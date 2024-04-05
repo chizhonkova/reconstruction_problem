@@ -71,6 +71,10 @@ std::shared_ptr<EvolutionTree> BuildRawTree(
     auto root = std::make_shared<EvolutionTree>(root_id);
     root->structure.graph = complete_graph;
 
+    for (int i = 1; i <= edge_count; ++i) {
+        root->structure.not_used_edges.insert(i);
+    }
+
     // Build children.
     while (*pos < bracket_representation.size() &&
         bracket_representation[*pos] == '(')
@@ -112,7 +116,8 @@ void PrintBracketRepresentation(
 
 void FillStructure(
     const std::string& structure,
-    std::shared_ptr<EvolutionTree> evolution_subtree)
+    std::shared_ptr<EvolutionTree> evolution_subtree, 
+    bool without_erase)
 {
     std::vector<std::string> tokens;
     std::string delimiter = "|";
@@ -173,6 +178,22 @@ void FillStructure(
 
         auto edge_index = evolution_subtree->structure.graph->GetEdgeIndex(first_end, last_start);
         evolution_subtree->structure.matching.insert(edge_index);
+    }
+
+    if (!without_erase)
+    {
+        for (int i = 1; i < tokens.size(); ++i) {
+            int edge = std::atoi(tokens[i].c_str());
+            evolution_subtree->structure.not_used_edges.erase(edge);
+        }
+    }
+}
+
+void FillLoopStructures(std::shared_ptr<EvolutionTree> evolution_subtree)
+{
+    for (int edge : evolution_subtree->structure.not_used_edges) {
+        std::string structure = "C|" + std::to_string(edge);
+        FillStructure(structure, evolution_subtree, true);
     }
 }
 
