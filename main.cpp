@@ -1,5 +1,6 @@
 #include "EvolutionTree.h"
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -83,8 +84,15 @@ int main(int argc, char* argv[])
     PrintBracketRepresentation(out, tree);
     out << std::endl;
 
-    for (const auto& [id, subtree] : reconstruction.id_to_subtree) {
-        PrintStructure(out, subtree);
+    std::vector<int> ids;
+    ids.reserve(reconstruction.id_to_subtree.size());
+    for (const auto& [id, _] : reconstruction.id_to_subtree) {
+        ids.push_back(id);
+    }
+    std::sort(ids.begin(), ids.end());
+
+    for (int id : ids) {
+        PrintStructure(out, reconstruction.id_to_subtree[id]);
     }
 
     out << "Final cost: " << cost << std::endl;
