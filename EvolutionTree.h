@@ -26,10 +26,20 @@ struct Reconstruction
 {
     Reconstruction(std::shared_ptr<EvolutionTree> evolution_tree);
 
+    void FillStructure(
+        const std::string& structure,
+        std::shared_ptr<EvolutionTree> evolution_subtree, 
+        bool without_erase = false);
+    void FillLoopStructures(std::shared_ptr<EvolutionTree> evolution_subtree);
+
     void CalculateInitialCost(std::shared_ptr<EvolutionTree> evolution_tree);
     void CalculatePotentialMatchings();
     void Solve();
     double CalculateFinalCost(std::shared_ptr<EvolutionTree> tree);
+
+    void PrintStructure(
+        std::ostream& stream,
+        std::shared_ptr<EvolutionTree> evolution_subtree);
 
     std::shared_ptr<EvolutionTree> evolution_tree;
     std::unordered_map<int, std::shared_ptr<EvolutionTree>> id_to_subtree;
@@ -39,7 +49,16 @@ struct Reconstruction
     double insertion_cost;
     double deletion_cost;
 
+    int next_id = 1;
+    std::unordered_map<std::string, int> edge_name_to_id;
+    std::unordered_map<int, std::string> edge_id_to_name;
+    std::unordered_set<std::string> all_edges;
+
 private:
+    std::vector<std::string> PrepareTokens(
+        std::shared_ptr<EvolutionTree> evolution_subtree,
+        std::vector<std::string> tokens);
+
     void SaveSubtree(std::shared_ptr<EvolutionTree> evolution_tree);
     std::vector<double> CalculateWeights(std::shared_ptr<EvolutionTree> evolution_tree);
 
@@ -54,6 +73,16 @@ private:
     double CalculateCostFromChild(
         const std::unordered_set<int>& node_matching,
         const std::unordered_set<int>& child_matching);
+
+    void AddPrevEdge(
+        int end,
+        std::string& repr);
+    void AddNextEdge(
+        int start,
+        std::string& repr);
+    std::string NextStructure(
+        const Graph& graph,
+        std::unordered_set<int>& not_visited);
 };
 
 std::shared_ptr<EvolutionTree> BuildRawTree(
@@ -62,17 +91,6 @@ std::shared_ptr<EvolutionTree> BuildRawTree(
     std::shared_ptr<int> pos = nullptr,
     std::shared_ptr<Graph> complete_graph = nullptr);
 
-void FillStructure(
-    const std::string& structure,
-    std::shared_ptr<EvolutionTree> evolution_subtree,
-    bool without_erase = false);
-
-void FillLoopStructures(std::shared_ptr<EvolutionTree> evolution_subtree);
-
 void PrintBracketRepresentation(
     std::ostream& stream,
     std::shared_ptr<EvolutionTree> evolution_tree);
-
-void PrintStructure(
-    std::ostream& stream,
-    std::shared_ptr<EvolutionTree> evolution_subtree);

@@ -1,0 +1,23 @@
+1 4 1 4
+1(2(3)(4)(5))(6(7(8)(9)(10))(11(12)(13)(14))(15))
+18
+3 1
+L|cox1|cox3'|ls1|ls3'|ls2'|cytb'|ls5'|ls4
+4 1
+L|cox1|cox3'|ls1|ls2'|ls3'|cytb'|ls4'|ls5
+5 1
+L|cox1|cox3'|ls1|ls3'|cytb'|ls5'|ls4
+8 1
+L|ss3|ls3|ls9|ss2|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss4|ss6|ls7
+9 1
+C|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss4|ss6|ls7
+10 1
+L|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss4|ss6|ls7
+12 1
+C|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss6|ls7|ss4
+13 1
+C|ls1|ss6|ls7|ss3|ls3|ls9|ss2|ls4|cox3'|cox1|cytb|ls8|ss5|ss1
+14 1
+C|ls1|ss6|ls7|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb
+15 1
+L|ls1|ss4|ss6|ls7|ls6|ss3|ls3|ls9|ss2|ls4|ls5|cox3'|ls8|ss5|ss1|cox1|cytb|ls2

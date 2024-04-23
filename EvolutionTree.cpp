@@ -16,7 +16,6 @@ void Reconstruction::SaveSubtree(std::shared_ptr<EvolutionTree> evolution_tree)
     if (evolution_tree == nullptr) {
         return;
     }
-
     id_to_subtree[evolution_tree->root_id] = evolution_tree;
 
     for (const auto& [_, child] : evolution_tree->children) {
@@ -71,10 +70,6 @@ std::shared_ptr<EvolutionTree> BuildRawTree(
     auto root = std::make_shared<EvolutionTree>(root_id);
     root->structure.graph = complete_graph;
 
-    for (int i = 1; i <= edge_count; ++i) {
-        root->structure.not_used_edges.insert(i);
-    }
-
     // Build children.
     while (*pos < bracket_representation.size() &&
         bracket_representation[*pos] == '(')
@@ -114,7 +109,36 @@ void PrintBracketRepresentation(
     }
 }
 
-void FillStructure(
+std::vector<std::string> Reconstruction::PrepareTokens(
+    std::shared_ptr<EvolutionTree> evolution_subtree, 
+    std::vector<std::string> tokens)
+{
+    for (int i = 1; i < tokens.size(); ++i) {
+        std::string token = tokens[i];
+        bool reversed = false;
+        if (token.back() == '\'') {
+            reversed = true;
+            token = {token.begin(), token.end() - 1};
+        }
+        if (!edge_name_to_id.contains(token)) {
+            auto id = next_id++;
+            edge_name_to_id[token] = id;
+            edge_id_to_name[id] = token;
+        }
+        if (evolution_subtree == nullptr) {
+            std::cout << "wtf" << std::endl;
+        }
+        evolution_subtree->structure.used_edges.insert(token);
+        all_edges.insert(token);
+        tokens[i] = std::to_string(edge_name_to_id[token]);
+        if (reversed) {
+            tokens[i] += '\'';
+        }
+    }
+    return tokens;
+}
+
+void Reconstruction::FillStructure(
     const std::string& structure,
     std::shared_ptr<EvolutionTree> evolution_subtree, 
     bool without_erase)
@@ -133,6 +157,8 @@ void FillStructure(
         std::cout << "tokens size is too small" << std::endl;
         throw "tokens size is too small";
     }
+
+    tokens = PrepareTokens(evolution_subtree, std::move(tokens));
 
     // For cycle structure first_start and last_end points should be united.
     if (tokens.front() == "C") {
@@ -179,20 +205,16 @@ void FillStructure(
         auto edge_index = evolution_subtree->structure.graph->GetEdgeIndex(first_end, last_start);
         evolution_subtree->structure.matching.insert(edge_index);
     }
-
-    if (!without_erase)
-    {
-        for (int i = 1; i < tokens.size(); ++i) {
-            int edge = std::atoi(tokens[i].c_str());
-            evolution_subtree->structure.not_used_edges.erase(edge);
-        }
-    }
 }
 
-void FillLoopStructures(std::shared_ptr<EvolutionTree> evolution_subtree)
+void Reconstruction::FillLoopStructures(std::shared_ptr<EvolutionTree> evolution_subtree)
 {
-    for (int edge : evolution_subtree->structure.not_used_edges) {
-        std::string structure = "C|" + std::to_string(edge);
+    auto dif = all_edges;
+    for (const auto& edge : evolution_subtree->structure.used_edges) {
+        dif.erase(edge);
+    }
+    for (const auto& edge : dif) {
+        std::string structure = "C|" + edge;
         FillStructure(structure, evolution_subtree, true);
     }
 }
@@ -205,26 +227,26 @@ int GetEnd(int start) {
     return 2 * edge - 2;
 }
 
-void AddNextEdge(
+void Reconstruction::AddNextEdge(
     int start,
     std::string& repr)
 {
     int end = GetEnd(start);
     int edge = start / 2 + 1;
 
-    repr += "|" + std::to_string(edge);
+    repr += "|" + edge_id_to_name[edge];
     if (start > end) {
         repr += "'";
     }
 }
 
-void AddPrevEdge(
+void Reconstruction::AddPrevEdge(
     int end,
     std::string& repr)
 {
     int start = GetEnd(end);
     int edge = start / 2 + 1;
-    std::string token = "|" + std::to_string(edge);
+    std::string token = "|" + edge_id_to_name[edge];
     if (start > end) {
         token += "'";
     }
@@ -240,7 +262,7 @@ void AddType(const Graph& graph, int start, int end, std::string& repr)
     }
 }
 
-std::string NextStructure(
+std::string Reconstruction::NextStructure(
     const Graph& graph,
     std::unordered_set<int>& not_visited)
 {
@@ -318,7 +340,7 @@ std::string NextStructure(
     return repr;
 }
 
-void PrintStructure(
+void Reconstruction::PrintStructure(
     std::ostream& stream,
     std::shared_ptr<EvolutionTree> evolution_subtree)
 {

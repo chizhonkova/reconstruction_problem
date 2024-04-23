@@ -1,0 +1,155 @@
+1(6(15)(11(14)(13)(12))(7(10)(9)(8)))(2(5)(4)(3))
+1
+Current cost: 75
+Structure:
+C|ls6
+C|ls7
+L|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss4|ss6
+C|ls5
+C|ls2
+C|ss3
+
+2
+Current cost: 90
+Structure:
+C|ls6
+C|ls7
+C|ss6
+C|ss4
+L|ls4'|ls5|cytb|ls3|ls1'|cox3|cox1'
+C|ls2
+C|ss3
+C|ls9
+C|ss2
+C|ls8
+C|ss5
+C|ss1
+
+3
+Current cost: 0
+Structure:
+C|ls6
+C|ls7
+C|ss6
+C|ss4
+L|ls4'|ls5|cytb|ls2|ls3|ls1'|cox3|cox1'
+C|ss3
+C|ls9
+C|ss2
+C|ls8
+C|ss5
+C|ss1
+
+4
+Current cost: 0
+Structure:
+C|ls6
+C|ls7
+C|ss6
+C|ss4
+L|cox1|cox3'|ls1|ls2'|ls3'|cytb'|ls4'|ls5
+C|ss3
+C|ls9
+C|ss2
+C|ls8
+C|ss5
+C|ss1
+
+5
+Current cost: 0
+Structure:
+C|ls6
+C|ls7
+C|ss6
+C|ss4
+L|ls4'|ls5|cytb|ls3|ls1'|cox3|cox1'
+C|ls2
+C|ss3
+C|ls9
+C|ss2
+C|ls8
+C|ss5
+C|ss1
+
+6
+Current cost: 49
+Structure:
+C|ls6
+L|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss4|ss6|ls7
+C|ls5
+C|ls2
+
+7
+Current cost: 14
+Structure:
+C|ls6
+L|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss4|ss6|ls7
+C|ls5
+C|ls2
+
+8
+Current cost: 0
+Structure:
+C|ls6
+L|ss3|ls3|ls9|ss2|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss4|ss6|ls7
+C|ls5
+C|ls2
+C|ls4
+
+9
+Current cost: 0
+Structure:
+C|ls6
+C|ls7|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss4|ss6
+C|ls5
+C|ls2
+
+10
+Current cost: 0
+Structure:
+C|ls6
+L|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss4|ss6|ls7
+C|ls5
+C|ls2
+
+11
+Current cost: 39
+Structure:
+C|ls6
+C|ls7|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss6
+C|ss4
+C|ls5
+C|ls2
+
+12
+Current cost: 0
+Structure:
+C|ls6
+C|ls7|ss4|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss6
+C|ls5
+C|ls2
+
+13
+Current cost: 0
+Structure:
+C|ls6
+C|ls7|ss3|ls3|ls9|ss2|ls4|cox3'|cox1|cytb|ls8|ss5|ss1|ls1|ss6
+C|ss4
+C|ls5
+C|ls2
+
+14
+Current cost: 0
+Structure:
+C|ls6
+C|ls7|ss3|ls3|ls9|ss2|ls4|cox3'|ls8|ss5|ss1|cox1|cytb|ls1|ss6
+C|ss4
+C|ls5
+C|ls2
+
+15
+Current cost: 0
+Structure:
+L|ls1|ss4|ss6|ls7|ls6|ss3|ls3|ls9|ss2|ls4|ls5|cox3'|ls8|ss5|ss1|cox1|cytb|ls2
+
+Final cost: 178

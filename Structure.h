@@ -16,5 +16,5 @@ struct Structure
     double current_cost = 0;
     double potential_cost = 0;
 
-    std::unordered_set<int> not_used_edges;
+    std::unordered_set<std::string> used_edges;
 };
