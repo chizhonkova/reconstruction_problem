@@ -1,0 +1,71 @@
+1 2 4 3
+1(2(3(4(6(9(13(16(25(49)(50))(48))(47))(46))(12(15(24(44)(45))(43))(42)))(8(11(23(40)(41))(38)(39))(22(36)(37))))(5(7(14(20(32)(33))(31))(19(28)(29)(30)))(21(34)(35))))(17(26(53)(54))(52))(51))(10(18(27(58)(59))(57))(55)(56))
+19
+28 1
+C|rna-l1|rna-l2|cox2|atp8|atp6|cox3|nd2|nd5|nd6|nd3|nd4l|nd1|nd4|cytb|cox1a|cox1b
+29 1
+L|rna-l1|rna-l2|cox2|atp8|atp6|cox3|nd2|nd5|nd6|nd3|nd4l|nd1|nd4|cytb|cox1a|cox1b
+30 2
+L|rna-l1|rna-l2|cox2|atp8|atp6|cox3|nd2|nd5
+L|nd6|nd3|nd4l|nd1|nd4|cytb|cox1a|cox1b
+31 1
+C|cox1b'|cox1a'|rna-s1|rna-s2|rna-l1|rna-l2|cytb'|nd1|nd6|nd5|cox2
+32 1
+C|cytb'|nd1|nd6|nd5|cox2|nd4l|cox1a|cox1b|nd3|rna-s1|rna-s2|rna-l1|rna-l2
+33 1
+C|cytb'|nd1|nd6|nd5|cox2|nd4l|cox1a|cox1b|nd3|rna-s1|rna-s2|rna-l1|rna-l2
+34 1
+C|rna-l1|rna-l2|nd5|nd1|cytb|nd2|nd6|atp6|nd4|rna-s1|rna-s2|cox3|cox2|nd4l|nd3|atp8|cox1a|cox1b
+35 1
+C|nd5|nd1|nd3|nd2|rna-s1|rna-s2|cox2|nd4|nd6|cytb|rna-l1|rna-l2|cox3|cox1a|cox1b|nd4l|atp8|atp6
+36 1
+C|cox1a|cox1b|cox2|atp8|atp6|cox3|nd3|nd4l|nd4|nd5|cytb|rna-s1|rna-s2|rna-l1|rna-l2|nd6'|nd1|nd2
+37 1
+C|cox1a|cox1b|cox2|atp8|atp6|cox3|nd3|nd4l|nd4|nd5|cytb|rna-s1|rna-s2|rna-l1|rna-l2|nd6'|nd1|nd2
+38 1
+C|cox1a|cox1b|nd2|nd6|rna-l1|rna-l2|atp6|atp8|cox2|nd1|rna-s1|rna-s2|cox3|cytb|nd4|nd3|nd5|nd4l
+39 1
+C|cox1a|cox1b|cox2|cox3|atp6|nd5'|rna-l1|rna-l2|nd6|nd4|nd2'|cytb'|nd1'|nd4l'|nd3'
+40 1
+C|cox1a|cox1b|nd4l'|nd6'|nd4'|cox2'|nd3'|nd5'|cox3|cytb'|nd2|nd1'|atp6'|rna-l1|rna-l2|rna-s1|rna-s2
+41 1
+C|nd1'|rna-l1|rna-l2|rna-s1|rna-s2|nd5'|nd2'|cox1a|cox1b|nd6|cox3'|cox2|nd3'|atp6|nd4|cytb'
+42 1
+C|atp8|atp6|cox3|nd3|nd5'|nd4'|nd4l'|nd6|cytb|nd1'|rna-l2'|rna-l1'|rna-s2'|rna-s1'|nd2|cox1a|cox1b|cox2
+43 1
+C|cox3|nd3|nd2|cox1a|cox1b|cox2|atp8|atp6|nd5'|nd4'|nd4l'|cytb'|nd6'|nd1'|rna-l2'|rna-l1'|rna-s2'|rna-s1'
+44 1
+C|cox1a|cox1b|cox3|cox2|rna-l1|rna-l2|rna-s1|rna-s2|cytb'|atp8|nd4l|nd4|nd2|nd3'|atp6'|nd5|nd1'|nd6
+45 1
+C|cox3|cytb|cox2|rna-s1|rna-l1|rna-s2|atp6|nd2|nd4|nd5|nd6|nd3|nd1|nd4l|cox1a|cox1b|rna-l2
+46 1
+C|rna-l1|rna-l2|rna-s1|rna-s2|nd1|nd2|cox1a|cox1b|cox2|atp8|atp6|cox3|nd3|nd4l|nd4|nd5|nd6'|cytb
+47 1
+C|atp6|cox3|nd3|nd4l|nd4|nd5|cytb|nd6'|rna-s1|rna-s2|rna-l1|rna-l2|nd2|nd1|cox1a|cox1b|cox2|atp8
+48 1
+C|nd2'|nd1'|cox1a|cox1b|nd4l|cox2|atp8|atp6|cox3|nd3|nd4|nd5|nd6'|cytb|rna-s1|rna-s2|rna-l2'|rna-l1'
+49 1
+C|cox1a|cox1b|nd4l|cox2|atp8|atp6|cox3|nd3|nd4|nd5|nd6'|cytb|rna-s1|rna-s2|nd1|nd2|rna-l1|rna-l2
+50 1
+C|rna-s1|rna-s2|nd1|nd2|rna-l1|rna-l2|cox1a|cox1b|nd4l|cox2|atp8|atp6|cox3|nd3|nd4|nd5|nd6'|cytb
+51 1
+C|cytb'|nd4l'|nd1|nd3|rna-l1|rna-l2|atp6|nd6|cox1b|cox3|nd5|nd2|rna-s1|rna-s2|cox2|cox1a|nd4
+52 1
+C|cox1a|cox1b|cox3|nd3|cox2|rna-s1|rna-s2|rna-l1|rna-l2|nd4|nd2|nd4l|nd5|nd1|cytb|nd6
+53 1
+C|cox1a|cox1b|rna-s1|rna-s2|rna-l1|rna-l2|nd6|cox3|nd3|nd4|nd4l|nd5|nd2|cytb|nd1|cox2
+54 1
+C|rna-s1|rna-s2|rna-l1|rna-l2|cox3|nd4|nd4l|nd5|nd2|cytb|nd1|cox2|cox1a|cox1b
+55 1
+C|rna-l1|rna-l2|nd4l|cox1a|cox1b|nd1|nd2|nd5|cox2|atp8|atp6|cox3|cytb|nd4|nd6|nd3|rna-s1|rna-s2
+56 4
+L|nd6'|cox2|nd4l
+L|nd4'|nd1|cytb
+L|nd3'|nd2|cox1a|cox1b|atp6
+L|nd5'|rna-s1|rna-s2|rna-l1|rna-l2|cox3
+57 1
+C|rna-l1|rna-l2|nd4l|atp6|cox3|nd2|nd5|nd1|cytb|nd4|nd6|atp9|rna-s1|rna-s2|nd3|cox1a|cox1b|cox2
+58 1
+C|cox1a|cox1b|atp8|atp9|rna-s1|rna-s2|rna-l1|rna-l2|cox2|nd3|nd4l|atp6|cox3|nd2|nd5|nd1|cytb|nd4|nd6
+59 1
+C|cox1a|cox1b|atp9|rna-s1|rna-s2|rna-l1|rna-l2|cox2|nd3|nd4l|atp6|cox3|nd2|nd5|nd1|cytb|nd4|nd6

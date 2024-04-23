@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
         }
         i++;
     }
-    
+
     if (input_filename.empty() || output_filename.empty()) {
         std::cout << "usage: ./reconstruction --input input-filename --output output-filename" << std::endl;
         return -1;
@@ -58,9 +58,12 @@ int main(int argc, char* argv[])
 
     std::cout << "Building structures ..." << std::endl;
 
+    std::vector<int> leaves;
+
     int leaf_id, structe_count;
     std::string structure;
     while(in >> leaf_id >> structe_count) {
+        leaves.emplace_back(leaf_id);
         // Skip line.
         std::getline(in, structure);
         for (int i = 0; i < structe_count; ++i) {
@@ -68,9 +71,12 @@ int main(int argc, char* argv[])
                 std::cout << "no structure is given" << std::endl;
                 throw "no structure is given";
             }
-            FillStructure(structure, reconstruction.id_to_subtree[leaf_id]);
+            reconstruction.FillStructure(structure, reconstruction.id_to_subtree[leaf_id]);
         }
-        FillLoopStructures(reconstruction.id_to_subtree[leaf_id]);
+    }
+
+    for (int leaf_id : leaves) {
+        reconstruction.FillLoopStructures(reconstruction.id_to_subtree[leaf_id]);
     }
 
     std::cout << "Solving problem ..." << std::endl;
@@ -92,7 +98,7 @@ int main(int argc, char* argv[])
     std::sort(ids.begin(), ids.end());
 
     for (int id : ids) {
-        PrintStructure(out, reconstruction.id_to_subtree[id]);
+        reconstruction.PrintStructure(out, reconstruction.id_to_subtree[id]);
     }
 
     out << "Final cost: " << cost << std::endl;
