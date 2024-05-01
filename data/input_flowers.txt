@@ -1,0 +1,27 @@
+1 4 1 4
+1(2(3(4(5(6(7(8)(9))(10))(11))(12))(13))(14(15(16(18)(19))(17))(20)))(21(22)(23))
+97
+8 1
+C|nad2|rps10|cox1|ccmFN|nad1'|nad7'|rps13'|nad5|mttB|cob'|rpl5'|rps12'|nad3'|matR|nad6'|rps4'|nad4|rpl2_1|rpl10_1|atp9_1'|ccmFc|ccmC'|rpl16_1'|rps3_1'|rps19_1'|atp6_1|cox2'|rpl16_2'|rps3_2'|rps19_2'|nad4L|atp4|sdh4'|cox3'|atp8_1'|rps1'|sdh3|nad9'|ccmB|atp1'
+9 1
+C|rpl16_1'|rps3_1'|rps19_1'|nad3|rps12|rpl5|rps14|atp4'|nad4L'|rps1|atp8_1|cox3|sdh4|cob|ccmFc|ccmC'|rpl16_2'|rps3_2'|rps19_2'|mttB|atp1|ccmB'|nad9|sdh3'|atp9_1|rpl10_1'|rpl2_1'|matR|nad6'|rps4'|nad4|rps10|cox1|ccmFN|nad7'|rps13'|rpl2_2|rpl10_2|atp9_2'|atp6_1
+10 1
+C|matR'|nad1'|ccmC'|atp6_2'|cob'|rps14'|rpl5'|nad2|sdh3|nad3|rps12|nad4L'|ccmFN'|cox1|rps10'|rps13'|atp9_1'|rps19_1|rps3_1|rpl16_1|cox2|nad5|nad4|cox3|atp1|sdh3'|ccmFc|nad6'|rps4'|nad9|ccmB|rpl2_1'|nad7'|sdh3'
+11 1
+C|rpl16_1'|rps3_1'|rps19_1'|nad2'|atp4'|nad5|nad7|ccmC'|rps13'|atp1'|rps4|atp6_1'|cox1'|rpl10_1|ccmB'|cox2|nad1'|rps1'|sdh4'|cox3'|atp8_1'|rps14'|rpl5'|matR'|nad4'|nad9|ccmFn|rps12'|nad3'|nad6'
+12 1
+C|atp6_1|nad1'|nad7'|rps4'|nad4'|atp9_1'|nad5|nad3'|nad2'|cox2|cob'|ccmB'|atp8_1|ccmC|rps13|cox3'|atp4'|nad4L'|ccmFc|matR'|mttB'|ccmFn|rpl23|rpl2_1|rps12'|rps3_1'|nad6'|cox1|nad9|atp1
+13 1
+C|nad5'|nad9|atp6_1|atp9_1'|nad1'|matR'|rpl2_1|nad4'|ccmFc|rps13'|ccmFN'|atp1|nad2|ccmB'|rpl16_1'|rps3_1'|nad7'|mttB'|rpl10_1|cox2|ccmC|nad4L|rps4|rps7|cox1|cob|atp4|nad6'|atp8_1|rps12'|nad3'|rps1'|rpl5'|cox3'|atp8_2
+17 1
+C|nad5|cox1|ccmFc|nad1'|rps7'|cob'|atp4|ccmFn'|rpl10_1|nad7|ccmB|nad3|rps12|rpl16_1'|rps3_1'|rps4|nad6|sdh3|nad2|mttB|rpl2_2|ccmC|rpl5'|rps13'|atp9_1|atp6_2|matR|atp1|rps1|nad9|atp8_1|cox3|sdh4|cox2|nad4L|nad4'|rps10
+18 1
+C|cox1'|rps10'|rpl2_1'|atp6_1'|nad2|rps4'|nad9'|rps12'|nad3'|rps1|nad5'|mttB'|nad7|rpl5|rps14|ccmB|nad1'|ccmFn|nad4'|cob|matR|atp6_2|ccmFc|nad6|atp1|nad4L|atp4|rps19_1'|atp9_1|cox2'|rpl10_1'|atp8_1'|rps3_1|rpl16_1|dpo-A|ccmC|sdh4'|cox3'
+19 1
+C|rpl14|rps11|cof'|amoMp1|amoMp2'|amoMp3'|atpA'|amoMp4'|amoMp5'|amoMp6'|rpob'|atpB'|rbcL|psbA|amoMp7'|amoMp8'|amoMp9|amoMp10|amoMp11'|amoMp12|nad9'|amoMp13|nad6'|amoMp14'|ccmFc'|nad4'|nad4a'|amoMp15'|ccmFn|amoMp16|nad7|atp4|cox1|amoMp17|amoMp18'|rps3_1|rpl16_1|atp6_1'|rps4|rps7'|sdh4'|cox3|amoMp19|mttB'|atp8_1|amoMp20'|rpl10_1|ccmB'|amoMp21|nad2|cox2|atp1'|amoMp22'|amoMp23|nad1'|rps1|nad5|matR'|amoMp24|amoMp25'|amoMp26'|cob'|rpl5'|rps14'|amoMp27'|ccmC'|rps12'|amoMp28
+20 1
+C|nad9'|rpl16_1'|rps3_1'|ccb206|nad2'|cox2'|ccb452'|rpl5|cob|nad6'|rps4'|nad5'|atp6_1|nad7|nad1'|matR'|rpl2_1|orfX|nad4|nad4L'|cox3|ccb382'|ccb256'|ccb203'|rps12'|nad3'|atp9_1|atp6_2'|atp1'|rps7
+22 1
+C|nad2'|nad9'|rps2|cox2'|rpl16_1'|rps3_1'|nad5'|nad1'|nad6|rps4|rps13'|atp6_1'|nad4L|nad7'|matR'|rps1'|ccmFN'|ccmC'|nad4'|cox1'|rps7'|mttB|nad3|rps12|atp8_1|rpl5|cox3|atp4|ccmB|cob|atp9_1'|atp1'|ccmFC'
+23 1
+C|nad5'|cox2'|nad1'|nad3|rps12|nad7'|nad2'|atp1|matR'|ccmFc'|atp6_2|atp9_1|atp8_1|mttB|ccmFN1|nad4'|nad6'|nad9'|ccmC|cox3'|nad4L|atp4|ccmB|ccmFN2'|cob'
