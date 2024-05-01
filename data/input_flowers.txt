@@ -1,12 +1,12 @@
-1 4 1 4
+1 2 4 3
 1(2(3(4(5(6(7(8)(9))(10))(11))(12))(13))(14(15(16(18)(19))(17))(20)))(21(22)(23))
-97
+99
 8 1
 C|nad2|rps10|cox1|ccmFN|nad1'|nad7'|rps13'|nad5|mttB|cob'|rpl5'|rps12'|nad3'|matR|nad6'|rps4'|nad4|rpl2_1|rpl10_1|atp9_1'|ccmFc|ccmC'|rpl16_1'|rps3_1'|rps19_1'|atp6_1|cox2'|rpl16_2'|rps3_2'|rps19_2'|nad4L|atp4|sdh4'|cox3'|atp8_1'|rps1'|sdh3|nad9'|ccmB|atp1'
 9 1
 C|rpl16_1'|rps3_1'|rps19_1'|nad3|rps12|rpl5|rps14|atp4'|nad4L'|rps1|atp8_1|cox3|sdh4|cob|ccmFc|ccmC'|rpl16_2'|rps3_2'|rps19_2'|mttB|atp1|ccmB'|nad9|sdh3'|atp9_1|rpl10_1'|rpl2_1'|matR|nad6'|rps4'|nad4|rps10|cox1|ccmFN|nad7'|rps13'|rpl2_2|rpl10_2|atp9_2'|atp6_1
 10 1
-C|matR'|nad1'|ccmC'|atp6_2'|cob'|rps14'|rpl5'|nad2|sdh3|nad3|rps12|nad4L'|ccmFN'|cox1|rps10'|rps13'|atp9_1'|rps19_1|rps3_1|rpl16_1|cox2|nad5|nad4|cox3|atp1|sdh3'|ccmFc|nad6'|rps4'|nad9|ccmB|rpl2_1'|nad7'|sdh3'
+C|matR'|nad1'|ccmC'|atp6_2'|cob'|rps14'|rpl5'|nad2|sdh3|nad3|rps12|nad4L'|ccmFN'|cox1|rps10'|rps13'|atp9_1'|rps19_1|rps3_1|rpl16_1|cox2|nad5|nad4|cox3|atp1|sdh3_2'|ccmFc|nad6'|rps4'|nad9|ccmB|rpl2_1'|nad7'|sdh3_3'
 11 1
 C|rpl16_1'|rps3_1'|rps19_1'|nad2'|atp4'|nad5|nad7|ccmC'|rps13'|atp1'|rps4|atp6_1'|cox1'|rpl10_1|ccmB'|cox2|nad1'|rps1'|sdh4'|cox3'|atp8_1'|rps14'|rpl5'|matR'|nad4'|nad9|ccmFn|rps12'|nad3'|nad6'
 12 1

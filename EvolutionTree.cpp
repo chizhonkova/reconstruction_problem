@@ -345,7 +345,7 @@ void Reconstruction::PrintStructure(
     std::shared_ptr<EvolutionTree> evolution_subtree)
 {
     stream << evolution_subtree->root_id << std::endl;
-    stream << "Current cost: " << evolution_subtree->structure.current_cost << std::endl;
+    // stream << "Current cost: " << evolution_subtree->structure.current_cost << std::endl;
 
     Graph graph;
     for (int i = 0; i < evolution_subtree->structure.graph->GetNumVertices(); ++i) {
@@ -456,6 +456,7 @@ void Reconstruction::CalculatePotentialMatching(std::shared_ptr<EvolutionTree> s
         std::pair<std::list<int>, double> solution = m.SolveMinimumCostPerfectMatching(weights);
 
         for (int i : solution.first) {
+            // subtree->structure.potential_matching.insert(i);
             if (weights[i] < 0) {
                 subtree->structure.potential_matching.insert(i);
             }
