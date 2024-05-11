@@ -345,7 +345,6 @@ void Reconstruction::PrintStructure(
     std::shared_ptr<EvolutionTree> evolution_subtree)
 {
     stream << evolution_subtree->root_id << std::endl;
-    // stream << "Current cost: " << evolution_subtree->structure.current_cost << std::endl;
 
     Graph graph;
     for (int i = 0; i < evolution_subtree->structure.graph->GetNumVertices(); ++i) {
@@ -556,6 +555,9 @@ std::vector<double> Reconstruction::CalculateWeights(std::shared_ptr<EvolutionTr
         }
 
         weights[i] = p_yes - p_no;
+        if (weights[i] >= 0) {
+            weights[i] = 0;
+        }
     }
 
     return weights;
